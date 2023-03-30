@@ -11,7 +11,10 @@ class Inventory:
 
     @staticmethod
     def hash_code(code):
-        return hash(code) % 3
+        value = 0
+        for letter in code:
+            value += ord(letter)
+        return value % 3
 
     def insert(self, title, price, code):
         """Insert the game in the database"""
@@ -25,7 +28,7 @@ class Inventory:
 
         game = {"code": code, "title": title, "price": price, "status": "AVAILABLE"}
 
-        group_index = self.hash_code(code)
+        group_index = str(self.hash_code(code))
         group = self.database["codes"].setdefault(group_index, [])
         if len(group) < self.primary_group_capacity:
             group.append(game)
@@ -48,7 +51,7 @@ class Inventory:
 
     def search_game_by_code(self, code):
         """Look up game by code"""
-        group_index = self.hash_code(code)
+        group_index = str(self.hash_code(code))
         group = self.database["codes"].get(group_index, [])
         for game in group:
             if game["code"] == code:
@@ -103,7 +106,7 @@ class Inventory:
 
         if game is None:
             return False
-        group_index = self.hash_code(code)
+        group_index = str(self.hash_code(code))
         group = self.database["codes"].get(group_index, [])
         if game in group:
             group.remove(game)

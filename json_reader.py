@@ -11,7 +11,7 @@ class JsonHandler:
         database = {"codes": {}, "titles_index": {}}
         try:
             with open(self.file, "r") as f:
-                database = json.load(f)
+                database = dict(json.load(f))
 
         except FileNotFoundError:
             print('File not found, empty database will be initialized')
